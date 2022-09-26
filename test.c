@@ -82,17 +82,17 @@ int main() {
 
     // Let's define some numbers
 
-    const double complex TOP_L = CMPLX(-2.2, 1);
-    const double complex BOT_R = CMPLX(0.5, -1);
+    const double complex TOP_L = CMPLX(-2, 1.3);
+    const double complex BOT_R = CMPLX(1, -1.3);
 
-    const size_t PIXEL_H = 2000;
+    const size_t PIXEL_H = 5000;
     const size_t PIXEL_W = PIXEL_H * 1.3;
 
     Matrix_c *grid = create_grid(TOP_L, BOT_R, PIXEL_W, PIXEL_H);
     // Map the nb_iter functions to the coordinate
     Matrix_i *iter_counts = maptoi_c(grid, nb_iter);
 
-    write_ppm_grayscale(iter_counts, "mandelbrot.ppm", 255.0 / MAX_ITERATIONS);
+    write_ppm_grayscale(iter_counts, "mandelbrot5k.ppm", 255.0 / MAX_ITERATIONS);
 
     return 0;
 }
