@@ -1,15 +1,18 @@
+#ifndef MANDELBROT_H
+#define MANDELBROT_H
+
 #include <stdio.h>
 #include <stdint.h>
 #include "ejovo.h"
 
 #include <complex.h>
-// I want to actually go ahead and use this file to draw the mandelbrot set.
 
-// I think that I can easily get this work in within like 30 minutes
-// I'll need complex numbers and access to my matrix functions
-
-#define MAX_ITERATIONS 200
-#define MAX_ABS_VALUE 2
+#ifndef MAX_ITERATIONS
+    #define MAX_ITERATIONS 200
+#endif
+#ifndef MAX_ABS_VALUE
+    #define MAX_ABS_VALUE 2
+#endif
 
 typedef double complex c64;
 
@@ -34,7 +37,7 @@ static inline int nb_iter_full(c64 c, double max_abs_value, int max_iterations) 
 }
 
 // Return the number of iterations for which c stays bouned i.e. cabs(fc_z(z) < MAX_ABS_VALUE)
-int nb_iter(c64 c) {
+static inline int nb_iter(c64 c) {
     return nb_iter_full(c, MAX_ABS_VALUE, MAX_ITERATIONS);
 }
 
@@ -88,18 +91,7 @@ static inline int count_iterations(int index,
 // Here we want to define a function that actually computes the grids coordinates
 // given the width of the grid in pixels, the height of the grid in pixels, and the top left
 // and bottom left points in C
-Matrix_c *create_grid(c64 top_left, c64 bottom_right, size_t w_grid, size_t h_grid) {
-
-    Matrix_c *grid = Matrix_new_c(h_grid, w_grid);
-
-    for (size_t i = 0; i < grid->nrows; i++) {
-        for (size_t j = 0; j < grid->ncols; j++) {
-            matset_c( grid, i, j, grid_coords_to_complex(i, j, w_grid, h_grid, top_left, bottom_right) ); // since the imaginary part is decreasing, we subtract i
-        }        
-    }
-
-    return grid;
-}
+Matrix_c *create_grid(c64 top_left, c64 bottom_right, size_t w_grid, size_t h_grid);
 
 typedef int (*fn_toi_c) (c64);
 
@@ -116,34 +108,4 @@ static inline Matrix_i *maptoi_c(const Matrix_c *A, fn_toi_c fn) {
     return out;
 }
 
-
-// Then we will need a different function to determine if a given c is in the mandelbrot set
-
-
-
-int main() {
-
-    // Let's define some numbers
-
-    const c64 TOP_L = CMPLX(-2, 1);
-    const c64 BOT_R = CMPLX(1, -2);
-
-    const size_t PIXEL_H = 1000;
-    const size_t PIXEL_W = PIXEL_H * 1.3;
-
-    // const size_t PIXEL_H = 5;
-    // const size_t PIXEL_H = 10;
-    // const size_t PIXEL_H = 20;
-    // const size_t PIXEL_H = 10;
-    // const size_t PIXEL_W = PIXEL_H;
-
-    Matrix_c *grid = create_grid(TOP_L, BOT_R, PIXEL_W, PIXEL_H);
-    // Map the nb_iter functions to the coordinate
-    Matrix_i *iter_counts = maptoi_c(grid, nb_iter);
-
-    // Matrix_print_i(iter_counts);
-
-    write_ppm_grayscale(iter_counts, "mandelbrot5k.ppm", 255.0 / MAX_ITERATIONS);
-
-    return 0;
-}
+#endif // MANDELBROT_H
