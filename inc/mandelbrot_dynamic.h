@@ -72,6 +72,8 @@ void worker(int world_size, int this_rank, const int grid_h, const int grid_w, c
     int rows_computed = 0;
     Matrix_i *img_row = Matrix_new_i(1, grid_w);
     MPI_Status status;
+    Clock *clock = Clock_new();
+    double total_time = 0;
 
     // 
     if (this_rank <= grid_h) {
@@ -83,15 +85,19 @@ void worker(int world_size, int this_rank, const int grid_h, const int grid_w, c
             // Do some work
 
             // Compute the number of iterations for this row
+            Clock_tic(clock);
             for (int j = 0; j < grid_w; j++) {
 
                 c64 z = grid_coords_to_complex(row, j, grid_w, grid_h, top_left, bottom_right);
                 img_row->data[j] = nb_iter(z);
             }
+            Clock_toc(clock);
 
             // Send your results
             MPI_Send(img_row->data, grid_w, MPI_INT, 0, row, MPI_COMM_WORLD);
 
+            // bookkeeping
+            total_time += elapsed_time(clock);
             rows_computed++;
 
             // And receive the next order
@@ -100,5 +106,5 @@ void worker(int world_size, int this_rank, const int grid_h, const int grid_w, c
         }
     }
 
-    printf("p%d computed %d rows\n", this_rank, rows_computed);
+    printf("p%d computed %d rows in %lfs\n", this_rank, rows_computed, total_time);
 }
