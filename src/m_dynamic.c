@@ -25,7 +25,7 @@ int main(int argc, char** argv){
     /**========================================================================
      *!                           Mandelbrot parameters
      *========================================================================**/
-    const size_t GRID_H = 500;
+    const size_t GRID_H = 5000;
     const size_t GRID_W = GRID_H * 1.3;
     const c64 TOP_L = CMPLX(-2, 1.3);
     const c64 BOT_R = CMPLX(0.5, -1.3);
