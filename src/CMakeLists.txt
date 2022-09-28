@@ -7,3 +7,7 @@ target_link_libraries(m_serial m mandelbrot)
 add_executable(m_static m_static.c)
 target_include_directories(m_static PUBLIC ${INC} ${MPI_C_INCLUDE_PATH} ${CMAKE_INSTALL_PREFIX})
 target_link_libraries(m_static ${MPI_C_LIBRARIES} m mandelbrot)
+
+add_executable(m_dynamic m_dynamic.c)
+target_include_directories(m_dynamic PUBLIC ${INC} ${MPI_C_INCLUDE_PATH} ${CMAKE_INSTALL_PREFIX})
+target_link_libraries(m_dynamic ${MPI_C_LIBRARIES} m mandelbrot)
